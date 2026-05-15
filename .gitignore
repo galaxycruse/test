@@ -1,0 +1,25 @@
+# 환경변수 (API 키 포함 - 절대 커밋 금지)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# FAISS 인덱스 (로컬 빌드 결과물)
+data/faiss_index/
+
+# 가상환경
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

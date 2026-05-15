@@ -147,8 +147,26 @@ def run_tutor(user_message: str, user_code: str = None):
     if selected_topic != "직접 입력":
         inputs["current_topic"] = selected_topic
 
-    with st.spinner("튜터가 생각 중..."):
-        result = graph.invoke(inputs, config=config)
+    try:
+        with st.spinner("튜터가 생각 중..."):
+            result = graph.invoke(inputs, config=config)
+    except EnvironmentError as e:
+        st.error(f"🔑 환경변수 오류: {e}")
+        return
+    except RuntimeError as e:
+        st.error(f"⚙️ 모델/인덱스 오류: {e}")
+        return
+    except Exception as e:
+        err_msg = str(e)
+        if "401" in err_msg or "authentication" in err_msg.lower():
+            st.error("🔑 API 키가 유효하지 않습니다. .env 파일의 ANTHROPIC_API_KEY를 확인하세요.")
+        elif "429" in err_msg or "rate_limit" in err_msg.lower():
+            st.warning("⏳ API 요청 한도 초과입니다. 잠시 후 다시 시도해주세요.")
+        elif "timeout" in err_msg.lower():
+            st.warning("⏱️ 응답 시간이 초과됐습니다. 다시 시도해주세요.")
+        else:
+            st.error(f"❌ 오류가 발생했습니다: {e}")
+        return
 
     st.session_state.tutor_state = result
 

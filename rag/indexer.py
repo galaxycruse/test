@@ -17,9 +17,10 @@ def build_index(force_rebuild: bool = False) -> FAISS:
     docs = []
     for md_file in DOCS_DIR.glob("*.md"):
         loader = TextLoader(str(md_file), encoding="utf-8")
-        docs.extend(loader.load())
-        for doc in docs[-1:]:
-            doc.metadata["source"] = md_file.name
+        loaded = loader.load()
+        for doc in loaded:
+            doc.metadata["source"] = md_file.name   # 모든 청크에 파일명 태깅
+        docs.extend(loaded)
 
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=800,

@@ -7,9 +7,10 @@ class TutorState(TypedDict):
     messages: Annotated[List[BaseMessage], operator.add]
     user_level: Optional[Literal["beginner", "intermediate", "advanced"]]
     current_topic: Optional[str]
-    learning_history: List[dict]      # [{"topic": ..., "understood": bool}]
-    mistake_patterns: List[str]       # 자주 틀리는 패턴 목록
+    learning_history: List[dict]      # [{"topic": ..., "action": ..., "score": ...}]
+    mistake_patterns: List[str]       # 자주 틀리는 패턴
     current_agent: Optional[str]
-    user_code: Optional[str]          # 사용자가 제출한 코드
-    quiz: Optional[dict]              # {"question": ..., "answer": ..., "hint": ...}
-    next: Optional[str]               # 다음 라우팅 대상
+    user_code: Optional[str]
+    quiz: Optional[dict]
+    next: Optional[str]
+    retry_count: int                  # 피드백 실패 후 재시도 횟수 (무한 루프 방지)
